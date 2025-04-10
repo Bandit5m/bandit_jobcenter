@@ -1,28 +1,31 @@
 local SpawnedPeds = {}
 
 CreateThread(function()
-    for k, v in pairs(Config.Locations) do
+    local centers = Config.Locations.points
+
+    for i = 1, #centers do
+        local center = centers[i];
         local point = lib.points.new({
-            coords = v.interact.coords,
+            coords = center.interact.coords,
             distance = 2.5
         })
 
         function point:onEnter()
-            CreateInteraction(k)
+            CreateInteraction(i)
         end
 
         function point:onExit()
-            DeleteInteraction(k)
+            CreateInteraction(i)
         end
 
-        if v.blip.enabled then
-            CreateBlip(k)
+        if center.blip.enabled then
+            CreateBlip(i)
         end
     end
 end)
 
 function CreateInteraction(index)
-    local data = Config.Locations[index];
+    local data = Config.Locations.points[index];
     local model = data.interact.ped;
     local location = data.interact.coords;
     local heading = data.interact.heading;
@@ -37,7 +40,7 @@ function CreateInteraction(index)
         local options = {
             {
                 name = 'interact',
-                icon = 'fas fa-user-secret',
+                icon = 'fas fa-hand',
                 label = 'Interact',
                 onSelect = function()
                     BrowseJobs(index)
@@ -59,7 +62,7 @@ function CreateInteraction(index)
 end
 
 function DeleteInteraction(index)
-    local data = Config.Locations[index];
+    local data = Config.Locations.points[index];
     local ped = SpawnedPeds[index];
     local model = GetEntityModel(ped);
 
@@ -75,7 +78,7 @@ function DeleteInteraction(index)
 end
 
 function CreateBlip(index)
-    local data = Config.Locations[index];
+    local data = Config.Locations.points[index];
     local blip = AddBlipForCoord(data.interact.coords);
 
     SetBlipSprite(blip, data.blip.sprite)
@@ -90,7 +93,7 @@ function CreateBlip(index)
 end
 
 function BrowseJobs(index)
-    local data = Config.Locations[index];
+    local data = Config.Locations.points[index];
     local Options = {};
 
     for _, data in ipairs(data.jobs) do

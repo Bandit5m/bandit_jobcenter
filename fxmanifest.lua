@@ -17,7 +17,3 @@ client_scripts {
   'bridge/**/client.lua',
   'source/client/*.lua',
 }
-
-escrow_ignore {
-  'configuration.lua'
-}
